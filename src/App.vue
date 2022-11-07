@@ -51,11 +51,15 @@
           </li>
         </ul>
       </div>
-      <ContractsDropDown name="Contrato" />
-      <WeeksDropDown name="Semana" />
-      <TechniciansDropDown name="Técnico" />
     </div>
   </nav>
+  <div class="container-sm text-right px-5 pt-2 pb-5">
+    <form class="row">
+      <ContractsSelect />
+      <TechniciansSelect />
+      <WeeksSelect />
+    </form>
+  </div>
   <div class="container-fluid text-center px-3">
     <div class="row align-items-start">
       <div class="col px-5"><ContractDay day="Lunes" /></div>
@@ -72,17 +76,17 @@
 <script>
 // import { mapState, mapActions } from "vuex";
 import ContractDay from "./components/ContractDay.vue";
-import ContractsDropDown from "./components/ContractsDropDown.vue";
-import WeeksDropDown from "./components/WeeksDropDown.vue";
-import TechniciansDropDown from "./components/TechniciansDropDown.vue";
+import ContractsSelect from "./components/ContractsSelect.vue";
+import WeeksSelect from "./components/WeeksSelect.vue";
+import TechniciansSelect from "./components/TechniciansSelect.vue";
 
 export default {
   name: "App",
   components: {
     ContractDay,
-    ContractsDropDown,
-    WeeksDropDown,
-    TechniciansDropDown,
+    ContractsSelect,
+    WeeksSelect,
+    TechniciansSelect,
   },
   // computed: {
   //   ...mapState(["contracts"]),
