@@ -30,8 +30,19 @@
               Disponibilidades
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Consultar</a></li>
-              <li><a class="dropdown-item" href="#">Editar</a></li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  @click="menuChange('showAvailability')"
+                  >Consultar</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" @click="menuChange('edit')"
+                  >Editar</a
+                >
+              </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -45,7 +56,14 @@
               Asignaciones
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Consultar</a></li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  @click="menuChange('showAllocations')"
+                  >Consultar</a
+                >
+              </li>
               <li><a class="dropdown-item" href="#">Generar</a></li>
             </ul>
           </li>
@@ -53,49 +71,29 @@
       </div>
     </div>
   </nav>
-  <div class="container-sm text-right px-5 pt-2 pb-5">
-    <form class="row">
-      <ContractsSelect />
-      <TechniciansSelect />
-      <WeeksSelect />
-    </form>
-  </div>
-  <div class="container-fluid text-center px-3">
-    <div class="row align-items-start">
-      <div class="col px-5"><ContractDay day="Lunes" /></div>
-      <div class="col px-5"><ContractDay day="Martes" /></div>
-      <div class="col px-5"><ContractDay day="Miercoles" /></div>
-      <div class="col px-5"><ContractDay day="Jueves" /></div>
-      <div class="col px-5"><ContractDay day="Viernes" /></div>
-      <div class="col px-5"><ContractDay day="Sabado" /></div>
-      <div class="col px-5"><ContractDay day="Domingo" /></div>
-    </div>
-  </div>
+  <ShowAvailability v-if="menuSelected == 'showAvailability'" />
+  <ShowAllocations v-if="menuSelected == 'showAllocations'" />
 </template>
 
 <script>
-// import { mapState, mapActions } from "vuex";
-import ContractDay from "./components/ContractDay.vue";
-import ContractsSelect from "./components/ContractsSelect.vue";
-import WeeksSelect from "./components/WeeksSelect.vue";
-import TechniciansSelect from "./components/TechniciansSelect.vue";
+import ShowAvailability from "./components/ShowAvailability.vue";
+import ShowAllocations from "./components/ShowAllocations.vue";
 
 export default {
   name: "App",
   components: {
-    ContractDay,
-    ContractsSelect,
-    WeeksSelect,
-    TechniciansSelect,
+    ShowAvailability,
+    ShowAllocations,
   },
-  // computed: {
-  //   ...mapState(["contracts"]),
-  // },
-  // mounted() {
-  //   this.fetchContracts();
-  // },
-  // methods: {
-  //   ...mapActions(["fetchContracts"]),
-  // },
+  data: () => ({
+    menuSelected: {},
+  }),
+  methods: {
+    menuChange: function (event) {
+      this.menuSelected = event;
+      console.log("Menu:" + event);
+      console.log("MenuSelected:" + this.menuSelected);
+    },
+  },
 };
 </script>

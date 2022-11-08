@@ -6,7 +6,6 @@ const contracts_list_uri = resource_uri + "contracts";
 const weeks_list_uri = resource_uri + "weeks";
 const technicians_list_uri = resource_uri + "technicians";
 
-//contracts
 export default createStore({
   state: {
     contractSelected: {},
