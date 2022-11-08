@@ -2,7 +2,7 @@
   <table class="table table-hover">
     <thead>
       <tr class="table-warning">
-        <th scope="row" colspan="3">{{ day }}</th>
+        <th scope="row" colspan="3">{{ day.name }}</th>
       </tr>
       <tr class="table-success">
         <th scope="col">Hora</th>
@@ -22,7 +22,10 @@ import HoursAvailable from "./HoursAvailable.vue";
 export default {
   name: "ContractDay",
   props: {
-    day: String,
+    day: {
+      type: Object,
+      default: () => {},
+    },
   },
   components: {
     HoursAvailable,

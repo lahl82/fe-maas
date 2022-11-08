@@ -8,19 +8,15 @@
   </div>
   <div class="container-fluid text-center px-3">
     <div class="row align-items-start">
-      <div class="col px-5"><ContractDay day="Lunes" /></div>
-      <div class="col px-5"><ContractDay day="Martes" /></div>
-      <div class="col px-5"><ContractDay day="Miercoles" /></div>
-      <div class="col px-5"><ContractDay day="Jueves" /></div>
-      <div class="col px-5"><ContractDay day="Viernes" /></div>
-      <div class="col px-5"><ContractDay day="Sabado" /></div>
-      <div class="col px-5"><ContractDay day="Domingo" /></div>
+      <div class="col px-5" v-for="day of daysPerContract" :key="day.id">
+        <ContractDay :day="day" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-// import { mapState, mapActions } from "vuex";
+import { mapState, mapActions } from "vuex";
 import ContractDay from "./ContractDay.vue";
 import ContractsSelect from "./ContractsSelect.vue";
 import WeeksSelect from "./WeeksSelect.vue";
@@ -33,6 +29,12 @@ export default {
     ContractsSelect,
     WeeksSelect,
     TechniciansSelect,
+  },
+  computed: {
+    ...mapState(["daysPerContract"]),
+  },
+  methods: {
+    ...mapActions(["fetchDaysPerContract"]),
   },
 };
 </script>

@@ -4,8 +4,7 @@
     <select
       id="selectTechnician"
       class="form-select"
-      v-model="technicianSelected"
-      @change="technicianChange()"
+      v-model="technicianSelectedV"
       aria-label="Default select example"
     >
       <option selected>--Seleccione--</option>
@@ -20,28 +19,30 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "TechniciansSelect",
   props: {
     name: String,
   },
-  data: () => ({
-    technicianSelected: {},
-  }),
   computed: {
     ...mapState(["technicians"]),
+    technicianSelectedV: {
+      get() {
+        return this.technicianSelected();
+      },
+      set(value) {
+        return this.setTechnicianSelected(value);
+      },
+    },
   },
   mounted() {
     this.fetchTechnicians();
   },
   methods: {
     ...mapActions(["fetchTechnicians", "setTechnicianSelected"]),
-    technicianChange: function () {
-      console.log("TechSelect:" + this.technicianSelected.name);
-      this.setTechnicianSelected(this.technicianSelected);
-    },
+    ...mapGetters(["technicianSelected"]),
   },
 };
 </script>

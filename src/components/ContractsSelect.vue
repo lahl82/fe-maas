@@ -4,8 +4,7 @@
     <select
       id="selectContract"
       class="form-select"
-      v-model="contractSelected"
-      @change="contractChange()"
+      v-model="contractSelectedV"
       aria-label="Default select example"
     >
       <option selected>--Seleccione--</option>
@@ -20,28 +19,30 @@
   </div>
 </template>
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "ContractsSelect",
   props: {
     name: String,
   },
-  data: () => ({
-    contractSelected: {},
-  }),
   computed: {
     ...mapState(["contracts"]),
+    contractSelectedV: {
+      get() {
+        return this.contractSelected();
+      },
+      set(value) {
+        return this.setContractSelected(value);
+      },
+    },
   },
   mounted() {
     this.fetchContracts();
   },
   methods: {
     ...mapActions(["fetchContracts", "setContractSelected"]),
-    contractChange: function () {
-      console.log("CtrSelect:" + this.contractSelected.name);
-      this.setContractSelected(this.contractSelected);
-    },
+    ...mapGetters(["contractSelected"]),
   },
 };
 </script>

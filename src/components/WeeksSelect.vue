@@ -4,7 +4,7 @@
     <select
       id="selectWeek"
       class="form-select"
-      v-model="weekSelected"
+      v-model="weekSelectedV"
       aria-label="Default select example"
     >
       <option selected>Seleccione...</option>
@@ -16,27 +16,30 @@
 </template>
 
 <script>
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapGetters } from "vuex";
 
 export default {
   name: "WeeksSelect",
   props: {
     name: String,
   },
-  data: () => ({
-    weekSelected: {},
-  }),
   computed: {
-    ...mapState([
-      "weeks",
-      "contracts",
-      "technicians",
-      "contractSelected",
-      "technicianSelected",
-    ]),
+    ...mapState(["weeks"]),
+    weekSelectedV: {
+      get() {
+        return this.weekSelected();
+      },
+      set(value) {
+        return this.setWeekSelected(value);
+      },
+    },
+  },
+  mounted() {
+    this.fetchWeeks();
   },
   methods: {
-    ...mapActions(["fetchWeeks"]),
+    ...mapGetters(["weekSelected"]),
+    ...mapActions(["fetchWeeks", "setWeekSelected"]),
   },
 };
 </script>
