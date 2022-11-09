@@ -23,6 +23,7 @@ export default createStore({
     blocksPerDay: [],
     availablesPerBlock: [],
     changed: 10,
+    lastResponse: {},
   },
   getters: {
     contractSelected(state) {
@@ -58,6 +59,8 @@ export default createStore({
     clearBlocksPerDay: (state) => (state.blocksPerDay = []),
     clearAvailablesPerBlock: (state) => (state.availablesPerBlock = []),
     setChanged: (state, changed) => (state.changed = changed),
+    setLastResponse: (state, lastResponse) =>
+      (state.lastResponse = lastResponse),
   },
   actions: {
     async fetchContracts({ commit }) {
@@ -156,6 +159,15 @@ export default createStore({
 
       dispatch("fetchDaysPerContract");
       dispatch("fetchTechniciansPerContract");
+    },
+    async updateAvailable({ commit }, newData) {
+      if (!Object.is(newData, undefined)) {
+        const uri = availables_per_block_uri.replace(":id", week_id);
+
+        const response = await axios.post(uri + "?block_id=" + bk_id);
+
+        commit("setWeekSelected", response);
+      }
     },
   },
   modules: {},

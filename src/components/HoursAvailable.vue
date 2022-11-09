@@ -4,21 +4,28 @@
     <td
       class="table-primary"
       v-for="(tech, index) in techniciansPerContract"
-      :key="tech['available_id']"
+      :key="tech['id']"
     >
-      <span
-        v-if="availablesPerBlock?.[this.block.id]?.[index]?.['available_id']"
-        class="material-symbols-outlined"
-      >
-        check
-      </span>
-      <span v-else>-</span>
+      <HourBox
+        :box_ids="{
+          contract_id: this.contractSelected.id,
+          block_id: this.block.id,
+          week_id: this.weekSelected.id,
+          tech_id: tech['id'],
+          checked:
+            availablesPerBlock?.[this.block.id]?.[index]?.['available_id'] ==
+            undefined
+              ? false
+              : true,
+        }"
+      ></HourBox>
     </td>
   </tr>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import HourBox from "./HourBox.vue";
 
 export default {
   name: "HoursAvailable",
@@ -28,8 +35,16 @@ export default {
       default: () => {},
     },
   },
+  components: {
+    HourBox,
+  },
   computed: {
-    ...mapState(["availablesPerBlock", "techniciansPerContract"]),
+    ...mapState([
+      "availablesPerBlock",
+      "techniciansPerContract",
+      "weekSelected",
+      "contractSelected",
+    ]),
   },
   mounted() {
     this.fetchAvailablesPerBlock(this.block.id);
