@@ -30,9 +30,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchAvailablesPerBlock"]),
+    ...mapActions(["fetchAvailablesPerBlock", "updateAvailable"]),
     clicked() {
-      this.box_data.checked = !this.box_data.checked;
+      this.box_data.checked = this.box_data.checked === 1 ? 0 : 1;
+      console.log(this.box_data);
+      this.updateAvailable(this.box_data);
     },
   },
 };
@@ -40,6 +42,5 @@ export default {
 <style scoped>
 .box {
   cursor: pointer;
-  margin: 15px 0;
 }
 </style>

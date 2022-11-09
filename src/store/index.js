@@ -1,14 +1,16 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const resource_uri = "http://127.0.0.1:3000/api/v1";
-const contracts_list_uri = resource_uri + "/contracts";
-const weeks_list_uri = resource_uri + "/weeks";
-const technicians_list_uri = resource_uri + "/technicians";
-const technicians_contract_uri = resource_uri + "/contracts/:id/technicians";
-const days_per_contract_uri = resource_uri + "/contracts/:id/days";
-const blocks_per_day_uri = resource_uri + "/days/:id/blocks";
-const availables_per_block_uri = resource_uri + "/weeks/:id/availables";
+const resource_uri = "http://127.0.0.1:3000/api/v1"; //GET
+const contracts_list_uri = resource_uri + "/contracts"; //GET
+const weeks_list_uri = resource_uri + "/weeks"; //GET
+const technicians_list_uri = resource_uri + "/technicians"; //GET
+const technicians_contract_uri = resource_uri + "/contracts/:id/technicians"; //GET
+const days_per_contract_uri = resource_uri + "/contracts/:id/days"; //GET
+const blocks_per_day_uri = resource_uri + "/days/:id/blocks"; //GET
+const availables_per_block_uri = resource_uri + "/weeks/:id/availables"; //GET
+const create_available_uri = resource_uri + "/weeks/:id/availables"; //POST
+const delete_available_uri = resource_uri + "/weeks/:id/availables"; //DELETE
 
 export default createStore({
   state: {
@@ -162,11 +164,30 @@ export default createStore({
     },
     async updateAvailable({ commit }, newData) {
       if (!Object.is(newData, undefined)) {
-        const uri = availables_per_block_uri.replace(":id", week_id);
+        const {
+          contract_id,
+          block_id,
+          week_id,
+          tech_id,
+          available_id,
+          checked,
+        } = newData;
 
-        const response = await axios.post(uri + "?block_id=" + bk_id);
+        let uri, response;
 
-        commit("setWeekSelected", response);
+        if (parseInt(checked)) {
+          uri = create_available_uri.replace(":id", week_id);
+          response = await axios.post(
+            `${uri}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
+          );
+        } else {
+          uri = delete_available_uri.replace(":id", week_id);
+          response = await axios.delete(
+            `${uri}/${available_id}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
+          );
+        }
+
+        commit("setLastResponse", response);
       }
     },
   },

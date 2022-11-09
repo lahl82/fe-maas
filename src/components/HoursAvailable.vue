@@ -12,11 +12,13 @@
           block_id: this.block.id,
           week_id: this.weekSelected.id,
           tech_id: tech['id'],
+          available_id:
+            availablesPerBlock?.[this.block.id]?.[index]?.['available_id'],
           checked:
             availablesPerBlock?.[this.block.id]?.[index]?.['available_id'] ==
             undefined
-              ? false
-              : true,
+              ? 0
+              : 1,
         }"
       ></HourBox>
     </td>
