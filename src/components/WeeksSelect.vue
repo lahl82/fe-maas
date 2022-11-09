@@ -34,9 +34,6 @@ export default {
       },
     },
   },
-  mounted() {
-    this.fetchWeeks();
-  },
   methods: {
     ...mapGetters(["weekSelected"]),
     ...mapActions(["fetchWeeks", "setWeekSelected"]),

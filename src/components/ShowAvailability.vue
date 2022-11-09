@@ -9,7 +9,7 @@
   <div class="container-fluid text-center px-3">
     <div class="row align-items-start">
       <div class="col px-5" v-for="day of daysPerContract" :key="day.id">
-        <ContractDay :day="day" />
+        <ContractDay :day="day" :key="this.changed" />
       </div>
     </div>
   </div>
@@ -17,21 +17,21 @@
 
 <script>
 import { mapState, mapActions } from "vuex";
-import ContractDay from "./ContractDay.vue";
 import ContractsSelect from "./ContractsSelect.vue";
 import WeeksSelect from "./WeeksSelect.vue";
 import TechniciansSelect from "./TechniciansSelect.vue";
+import ContractDay from "./ContractDay.vue";
 
 export default {
   name: "ShowAvailability",
   components: {
-    ContractDay,
     ContractsSelect,
-    WeeksSelect,
     TechniciansSelect,
+    WeeksSelect,
+    ContractDay,
   },
   computed: {
-    ...mapState(["daysPerContract"]),
+    ...mapState(["daysPerContract", "changed"]),
   },
   methods: {
     ...mapActions(["fetchDaysPerContract"]),

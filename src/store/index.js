@@ -1,12 +1,14 @@
 import { createStore } from "vuex";
 import axios from "axios";
 
-const resource_uri = "http://127.0.0.1:3000/api/v1/";
-const contracts_list_uri = resource_uri + "contracts";
-const weeks_list_uri = resource_uri + "weeks";
-const technicians_list_uri = resource_uri + "technicians";
-const technicians_contract_uri = resource_uri + "contracts/:id/technicians";
-const days_per_contract_uri = resource_uri + "contracts/:id/days";
+const resource_uri = "http://127.0.0.1:3000/api/v1";
+const contracts_list_uri = resource_uri + "/contracts";
+const weeks_list_uri = resource_uri + "/weeks";
+const technicians_list_uri = resource_uri + "/technicians";
+const technicians_contract_uri = resource_uri + "/contracts/:id/technicians";
+const days_per_contract_uri = resource_uri + "/contracts/:id/days";
+const blocks_per_day_uri = resource_uri + "/days/:id/blocks";
+const availables_per_block_uri = resource_uri + "/weeks/:id/availables";
 
 export default createStore({
   state: {
@@ -18,6 +20,9 @@ export default createStore({
     technicians: [],
     daysPerContract: [],
     techniciansPerContract: [],
+    blocksPerDay: [],
+    availablesPerBlock: [],
+    changed: 10,
   },
   getters: {
     contractSelected(state) {
@@ -46,11 +51,17 @@ export default createStore({
       (state.daysPerContract = daysPerContract),
     setTechniciansPerContract: (state, techniciansPerContract) =>
       (state.techniciansPerContract = techniciansPerContract),
+    setBlocksPerDay: (state, { day_id, data }) =>
+      (state.blocksPerDay[day_id] = data),
+    setAvailablesPerBlock: (state, { block_id, data }) =>
+      (state.availablesPerBlock[block_id] = data),
+    clearBlocksPerDay: (state) => (state.blocksPerDay = []),
+    clearAvailablesPerBlock: (state) => (state.availablesPerBlock = []),
+    setChanged: (state, changed) => (state.changed = changed),
   },
   actions: {
     async fetchContracts({ commit }) {
       const response = await axios.get(contracts_list_uri);
-      console.log(response.data);
       commit("setContracts", response.data);
     },
     async fetchWeeks({ commit, state, dispatch }) {
@@ -61,7 +72,6 @@ export default createStore({
         const response = await axios.get(
           weeks_list_uri + "?contract_id=" + ctr_id + "&technician_id=" + tec_id
         );
-        console.log(response.data);
         commit("setWeeks", response.data);
       } else {
         commit("setWeeks", null);
@@ -71,7 +81,6 @@ export default createStore({
     },
     async fetchTechnicians({ commit }) {
       const response = await axios.get(technicians_list_uri);
-      console.log(response.data);
       commit("setTechnicians", response.data);
     },
     async fetchDaysPerContract({ commit, state }) {
@@ -83,10 +92,9 @@ export default createStore({
         const uri = days_per_contract_uri.replace(":id", ctr_id);
 
         const response = await axios.get(uri);
-        console.log(response.data);
         commit("setDaysPerContract", response.data);
       } else {
-        commit("setDaysPerContract", null);
+        commit("setDaysPerContract", []);
       }
     },
     async fetchTechniciansPerContract({ commit, state }) {
@@ -98,25 +106,36 @@ export default createStore({
         const uri = technicians_contract_uri.replace(":id", ctr_id);
 
         const response = await axios.get(uri + "?week_id=" + week_id);
-        console.log(response.data);
         commit("setTechniciansPerContract", response.data);
       } else {
-        commit("setTechniciansPerContract", null);
+        commit("setTechniciansPerContract", []);
       }
     },
-    async fetchBlocksPerTechnicianPerDay({ commit, state }) {
+    async fetchBlocksPerDay({ commit, state }, dy_id) {
       const week_id = state.weekSelected?.id;
 
       if (!Object.is(week_id, undefined)) {
-        const ctr_id = state.contractSelected.id;
+        const uri = blocks_per_day_uri.replace(":id", dy_id);
 
-        const uri = technicians_contract_uri.replace(":id", ctr_id);
-
-        const response = await axios.get(uri + "?week_id=" + week_id);
-        console.log(response.data);
-        commit("setTechniciansPerContract", response.data);
+        const response = await axios.get(uri);
+        commit("setBlocksPerDay", { day_id: dy_id, data: response.data });
       } else {
-        commit("setTechniciansPerContract", null);
+        commit("clearBlocksPerDay");
+      }
+    },
+    async fetchAvailablesPerBlock({ commit, state }, bk_id) {
+      const week_id = state.weekSelected?.id;
+
+      if (!Object.is(week_id, undefined)) {
+        const uri = availables_per_block_uri.replace(":id", week_id);
+
+        const response = await axios.get(uri + "?block_id=" + bk_id);
+        commit("setAvailablesPerBlock", {
+          block_id: bk_id,
+          data: response.data,
+        });
+      } else {
+        commit("clearAvailablesPerBlock");
       }
     },
     setContractSelected({ commit, dispatch }, ContractSelected) {
@@ -128,7 +147,13 @@ export default createStore({
       dispatch("fetchWeeks");
     },
     setWeekSelected({ commit, dispatch }, WeekSelected) {
+      console.log("Entra a setWeekSelected con: " + WeekSelected);
+      commit("clearAvailablesPerBlock");
+      commit("clearBlocksPerDay");
       commit("setWeekSelected", WeekSelected);
+
+      commit("setChanged", Math.round(Math.random() * 100));
+
       dispatch("fetchDaysPerContract");
       dispatch("fetchTechniciansPerContract");
     },
