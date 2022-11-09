@@ -34,13 +34,8 @@
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="menuChange('showAvailability')"
-                  >Consultar</a
-                >
-              </li>
-              <li>
-                <a class="dropdown-item" href="#" @click="menuChange('edit')"
-                  >Editar</a
+                  @click="menuChange('AvailableShow')"
+                  >Gestionar</a
                 >
               </li>
             </ul>
@@ -60,7 +55,7 @@
                 <a
                   class="dropdown-item"
                   href="#"
-                  @click="menuChange('showAllocations')"
+                  @click="menuChange('AllocationsShow')"
                   >Consultar</a
                 >
               </li>
@@ -71,19 +66,19 @@
       </div>
     </div>
   </nav>
-  <ShowAvailability v-if="menuSelected == 'showAvailability'" />
-  <ShowAllocations v-if="menuSelected == 'showAllocations'" />
+  <AvailableShow v-if="menuSelected == 'AvailableShow'" />
+  <AllocationsShow v-if="menuSelected == 'AllocationsShow'" />
 </template>
 
 <script>
-import ShowAvailability from "./components/ShowAvailability.vue";
-import ShowAllocations from "./components/ShowAllocations.vue";
+import AvailableShow from "./components/AvailableShow.vue";
+import AllocationsShow from "./components/AllocationsShow.vue";
 
 export default {
   name: "App",
   components: {
-    ShowAvailability,
-    ShowAllocations,
+    AvailableShow,
+    AllocationsShow,
   },
   data: () => ({
     menuSelected: {},

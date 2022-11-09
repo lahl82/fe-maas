@@ -1,4 +1,5 @@
 <template>
+  Disponibilidades
   <div class="container-sm text-right px-5 pt-2 pb-5">
     <form class="row text-center justify-content-center">
       <ContractsSelect />
@@ -9,7 +10,7 @@
   <div class="container-fluid text-center px-3">
     <div class="row align-items-start">
       <div class="col px-5" v-for="day of daysPerContract" :key="day.id">
-        <ContractDay :day="day" :key="this.changed" />
+        <AvailableContractDay :day="day" :key="this.changed" />
       </div>
     </div>
   </div>
@@ -20,7 +21,7 @@ import { mapState, mapActions } from "vuex";
 import ContractsSelect from "./ContractsSelect.vue";
 import WeeksSelect from "./WeeksSelect.vue";
 import TechniciansSelect from "./TechniciansSelect.vue";
-import ContractDay from "./ContractDay.vue";
+import AvailableContractDay from "./AvailableContractDay.vue";
 
 export default {
   name: "ShowAvailability",
@@ -28,7 +29,7 @@ export default {
     ContractsSelect,
     TechniciansSelect,
     WeeksSelect,
-    ContractDay,
+    AvailableContractDay,
   },
   computed: {
     ...mapState(["daysPerContract", "changed"]),

@@ -14,7 +14,7 @@
       </tr>
     </thead>
     <tbody>
-      <HoursAvailable
+      <AllocationsHours
         :block="block"
         v-for="block of blocksPerDay[this.day.id]"
         :key="parseInt(block.id) * parseInt(this.changed)"
@@ -25,10 +25,10 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-import HoursAvailable from "./HoursAvailable.vue";
+import AllocationsHours from "./AllocationsHours.vue";
 
 export default {
-  name: "ContractDay",
+  name: "AllocationsContractDay",
   props: {
     day: {
       type: Object,
@@ -39,15 +39,11 @@ export default {
     ...mapState(["techniciansPerContract", "blocksPerDay", "changed"]),
   },
   components: {
-    HoursAvailable,
+    AllocationsHours,
   },
   mounted() {
-    console.log("Se monto el ContractDay");
     this.fetchBlocksPerDay(this.day.id);
     this.fetchTechniciansPerContract();
-  },
-  updated() {
-    // console.log("updated el ContractDay");
   },
   methods: {
     ...mapActions(["fetchBlocksPerDay", "fetchTechniciansPerContract"]),

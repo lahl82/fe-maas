@@ -13,7 +13,7 @@
 import { mapActions } from "vuex";
 
 export default {
-  name: "HourBox",
+  name: "AvailableHourBox",
   props: {
     box_ids: {
       type: Object,

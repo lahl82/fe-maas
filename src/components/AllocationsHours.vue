@@ -6,7 +6,7 @@
       v-for="(tech, index) in techniciansPerContract"
       :key="tech['id']"
     >
-      <HourBox
+      <AllocationsHourBox
         :box_ids="{
           contract_id: this.contractSelected.id,
           block_id: this.block.id,
@@ -20,17 +20,17 @@
               ? 0
               : 1,
         }"
-      ></HourBox>
+      ></AllocationsHourBox>
     </td>
   </tr>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import HourBox from "./HourBox.vue";
+import AllocationsHourBox from "./AllocationsHourBox.vue";
 
 export default {
-  name: "HoursAvailable",
+  name: "AllocationsHours",
   props: {
     block: {
       type: Object,
@@ -38,7 +38,7 @@ export default {
     },
   },
   components: {
-    HourBox,
+    AllocationsHourBox,
   },
   computed: {
     ...mapState([
