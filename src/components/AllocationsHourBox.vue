@@ -42,9 +42,11 @@ export default {
   methods: {
     ...mapActions(["updateAllocation"]),
     clicked() {
-      this.alloc_data.checked = this.alloc_data.checked === 1 ? 0 : 1;
-      console.log(this.alloc_data);
-      this.updateAllocation(this.alloc_data);
+      if (this.avails_data.checked === 1) {
+        this.alloc_data.checked = this.alloc_data.checked === 1 ? 0 : 1;
+        console.log(this.alloc_data);
+        this.updateAllocation(this.alloc_data);
+      }
     },
   },
 };
