@@ -1,6 +1,6 @@
 <template>
-  Asignaciones
   <div class="container-sm text-right px-5 pt-2 pb-5">
+    <div class="fs-3 text-center">Consultar Asignaciones</div>
     <form class="row text-center justify-content-center">
       <ContractsSelect />
       <TechniciansSelect />

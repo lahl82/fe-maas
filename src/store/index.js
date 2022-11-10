@@ -8,9 +8,16 @@ const technicians_list_uri = resource_uri + "/technicians"; //GET
 const technicians_contract_uri = resource_uri + "/contracts/:id/technicians"; //GET
 const days_per_contract_uri = resource_uri + "/contracts/:id/days"; //GET
 const blocks_per_day_uri = resource_uri + "/days/:id/blocks"; //GET
+
 const availables_per_block_uri = resource_uri + "/weeks/:id/availables"; //GET
-const create_available_uri = resource_uri + "/weeks/:id/availables"; //POST
-const delete_available_uri = resource_uri + "/weeks/:id/availables"; //DELETE
+const available_create_uri = resource_uri + "/weeks/:id/availables"; //POST
+const available_delete_uri = resource_uri + "/weeks/:id/availables"; //DELETE
+
+const allocations_per_block_uri = resource_uri + "/weeks/:id/allocations"; //GET
+const allocations_generate_uri =
+  resource_uri + "/contracts/:contract_id/weeks/:week_id/allocations/generate"; //POST
+const allocation_create_uri = resource_uri + "/weeks/:id/allocations"; //POST
+const allocation_delete_uri = resource_uri + "/weeks/:id/allocations"; //DELETE
 
 export default createStore({
   state: {
@@ -24,6 +31,7 @@ export default createStore({
     techniciansPerContract: [],
     blocksPerDay: [],
     availablesPerBlock: [],
+    allocationsPerBlock: [],
     changed: 10,
     lastResponse: {},
   },
@@ -58,8 +66,11 @@ export default createStore({
       (state.blocksPerDay[day_id] = data),
     setAvailablesPerBlock: (state, { block_id, data }) =>
       (state.availablesPerBlock[block_id] = data),
+    setAllocationsPerBlock: (state, { block_id, data }) =>
+      (state.allocationsPerBlock[block_id] = data),
     clearBlocksPerDay: (state) => (state.blocksPerDay = []),
     clearAvailablesPerBlock: (state) => (state.availablesPerBlock = []),
+    clearAllocationsPerBlock: (state) => (state.allocationsPerBlock = []),
     setChanged: (state, changed) => (state.changed = changed),
     setLastResponse: (state, lastResponse) =>
       (state.lastResponse = lastResponse),
@@ -143,6 +154,21 @@ export default createStore({
         commit("clearAvailablesPerBlock");
       }
     },
+    async fetchAllocationsPerBlock({ commit, state }, bk_id) {
+      const week_id = state.weekSelected?.id;
+
+      if (!Object.is(week_id, undefined)) {
+        const uri = allocations_per_block_uri.replace(":id", week_id);
+
+        const response = await axios.get(uri + "?block_id=" + bk_id);
+        commit("setAllocationsPerBlock", {
+          block_id: bk_id,
+          data: response.data,
+        });
+      } else {
+        commit("clearAllocationsPerBlock");
+      }
+    },
     setContractSelected({ commit, dispatch }, ContractSelected) {
       commit("setContractSelected", ContractSelected);
       dispatch("fetchWeeks");
@@ -152,8 +178,8 @@ export default createStore({
       dispatch("fetchWeeks");
     },
     setWeekSelected({ commit, dispatch }, WeekSelected) {
-      console.log("Entra a setWeekSelected con: " + WeekSelected);
       commit("clearAvailablesPerBlock");
+      commit("clearAllocationsPerBlock");
       commit("clearBlocksPerDay");
       commit("setWeekSelected", WeekSelected);
 
@@ -176,15 +202,61 @@ export default createStore({
         let uri, response;
 
         if (parseInt(checked)) {
-          uri = create_available_uri.replace(":id", week_id);
+          uri = available_create_uri.replace(":id", week_id);
           response = await axios.post(
             `${uri}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
           );
         } else {
-          uri = delete_available_uri.replace(":id", week_id);
+          uri = available_delete_uri.replace(":id", week_id);
           response = await axios.delete(
             `${uri}/${available_id}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
           );
+        }
+
+        commit("setLastResponse", response);
+      }
+    },
+    async updateAllocation({ commit }, newData) {
+      if (!Object.is(newData, undefined)) {
+        const {
+          contract_id,
+          block_id,
+          week_id,
+          tech_id,
+          allocation_id,
+          checked,
+        } = newData;
+
+        let uri, response;
+
+        if (parseInt(checked)) {
+          uri = allocation_create_uri.replace(":id", week_id);
+          response = await axios.post(
+            `${uri}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
+          );
+        } else {
+          uri = allocation_delete_uri.replace(":id", week_id);
+          response = await axios.delete(
+            `${uri}/${allocation_id}?block_id=${block_id}&contract_id=${contract_id}&technician_id=${tech_id}`
+          );
+        }
+
+        commit("setLastResponse", response);
+      }
+    },
+    async generateAllocations({ commit, state }) {
+      const week_id = state.weekSelected?.id;
+
+      if (!Object.is(week_id, undefined)) {
+        const contract_id = state.contractSelected?.id;
+        let uri, response;
+
+        uri = allocations_generate_uri.replace(":contract_id", contract_id);
+        uri = uri.replace(":week_id", week_id);
+        try {
+          response = await axios.post(uri);
+        } catch (e) {
+          console.log("No hay datos suficientes");
         }
 
         commit("setLastResponse", response);

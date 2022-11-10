@@ -30,7 +30,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["fetchAvailablesPerBlock", "updateAvailable"]),
+    ...mapActions(["updateAvailable"]),
     clicked() {
       this.box_data.checked = this.box_data.checked === 1 ? 0 : 1;
       console.log(this.box_data);

@@ -7,7 +7,20 @@
       :key="tech['id']"
     >
       <AllocationsHourBox
-        :box_ids="{
+        :alloc_ids="{
+          contract_id: this.contractSelected.id,
+          block_id: this.block.id,
+          week_id: this.weekSelected.id,
+          tech_id: tech['id'],
+          allocation_id:
+            allocationsPerBlock?.[this.block.id]?.[index]?.['allocation_id'],
+          checked:
+            allocationsPerBlock?.[this.block.id]?.[index]?.['allocation_id'] ==
+            undefined
+              ? 0
+              : 1,
+        }"
+        :avail_ids="{
           contract_id: this.contractSelected.id,
           block_id: this.block.id,
           week_id: this.weekSelected.id,
@@ -42,6 +55,7 @@ export default {
   },
   computed: {
     ...mapState([
+      "allocationsPerBlock",
       "availablesPerBlock",
       "techniciansPerContract",
       "weekSelected",
@@ -49,10 +63,11 @@ export default {
     ]),
   },
   mounted() {
+    this.fetchAllocationsPerBlock(this.block.id);
     this.fetchAvailablesPerBlock(this.block.id);
   },
   methods: {
-    ...mapActions(["fetchAvailablesPerBlock"]),
+    ...mapActions(["fetchAllocationsPerBlock", "fetchAvailablesPerBlock"]),
   },
 };
 </script>

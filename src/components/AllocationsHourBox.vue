@@ -1,6 +1,9 @@
 <template>
   <div class="box" @click="clicked">
-    <span v-if="box_data.checked" class="material-symbols-outlined">
+    <span v-if="alloc_data.checked" class="material-symbols-outlined">
+      check_box
+    </span>
+    <span v-else-if="avails_data.checked" class="material-symbols-outlined">
       check
     </span>
     <span v-else class="material-symbols-outlined">
@@ -15,26 +18,33 @@ import { mapActions } from "vuex";
 export default {
   name: "AllocationsHourBox",
   props: {
-    box_ids: {
+    alloc_ids: {
+      type: Object,
+    },
+    avail_ids: {
       type: Object,
     },
   },
   data() {
     return {
-      box_data: {},
+      alloc_data: {},
+      avails_data: {},
     };
   },
   watch: {
-    box_ids(newVal) {
-      this.box_data = Object.assign({}, newVal);
+    alloc_ids(newVal) {
+      this.alloc_data = Object.assign({}, newVal);
+    },
+    avail_ids(newVal) {
+      this.avails_data = Object.assign({}, newVal);
     },
   },
   methods: {
-    ...mapActions(["fetchAvailablesPerBlock", "updateAvailable"]),
+    ...mapActions(["updateAllocation"]),
     clicked() {
-      this.box_data.checked = this.box_data.checked === 1 ? 0 : 1;
-      console.log(this.box_data);
-      this.updateAvailable(this.box_data);
+      this.alloc_data.checked = this.alloc_data.checked === 1 ? 0 : 1;
+      console.log(this.alloc_data);
+      this.updateAllocation(this.alloc_data);
     },
   },
 };

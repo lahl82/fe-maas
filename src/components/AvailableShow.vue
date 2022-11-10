@@ -1,6 +1,6 @@
 <template>
-  Disponibilidades
   <div class="container-sm text-right px-5 pt-2 pb-5">
+    <div class="fs-3 text-center">Gestionar Disponibilidades</div>
     <form class="row text-center justify-content-center">
       <ContractsSelect />
       <TechniciansSelect />
@@ -24,7 +24,7 @@ import TechniciansSelect from "./TechniciansSelect.vue";
 import AvailableContractDay from "./AvailableContractDay.vue";
 
 export default {
-  name: "ShowAvailability",
+  name: "AvailableShow",
   components: {
     ContractsSelect,
     TechniciansSelect,

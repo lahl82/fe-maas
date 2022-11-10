@@ -59,7 +59,14 @@
                   >Consultar</a
                 >
               </li>
-              <li><a class="dropdown-item" href="#">Generar</a></li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  @click="menuChange('GenerateAllocationsShow')"
+                  >Generar</a
+                >
+              </li>
             </ul>
           </li>
         </ul>
@@ -68,17 +75,20 @@
   </nav>
   <AvailableShow v-if="menuSelected == 'AvailableShow'" />
   <AllocationsShow v-if="menuSelected == 'AllocationsShow'" />
+  <GenerateAllocationsShow v-if="menuSelected == 'GenerateAllocationsShow'" />
 </template>
 
 <script>
 import AvailableShow from "./components/AvailableShow.vue";
 import AllocationsShow from "./components/AllocationsShow.vue";
+import GenerateAllocationsShow from "./components/GenerateAllocationsShow.vue";
 
 export default {
   name: "App",
   components: {
     AvailableShow,
     AllocationsShow,
+    GenerateAllocationsShow,
   },
   data: () => ({
     menuSelected: {},
