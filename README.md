@@ -1,6 +1,6 @@
 # fe-maas
 
-FrontEnd de aplicación de monitoreo de servicios MaaS
+FrontEnd de aplicación de monitoreo de servicios MaaS Version 0.1
 
 ## En Ubuntu 20.04
 
@@ -37,20 +37,7 @@ npm install --save axios
 npm install
 ```
 
-### Compiles and hot-reloads for development
-
+### Para ejecutar el Servidor
 ```
 npm run serve
-```
-
-### Compiles and minifies for production
-
-```
-npm run build
-```
-
-### Lints and fixes files
-
-```
-npm run lint
 ```
